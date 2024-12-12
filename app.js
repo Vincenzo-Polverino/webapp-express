@@ -1,12 +1,15 @@
 const express = require('express')
 const server = express()
 const MoviesRouter = require('./routes/movies')
+const cors = require('cors')
 
+server.use(express.json())
+server.use(cors())
+server.use('/api/movies', MoviesRouter)
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT
 
-server.use('/api/movies', MoviesRouter)
 
 server.listen(PORT, () => {
 
