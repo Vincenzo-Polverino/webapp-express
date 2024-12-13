@@ -41,6 +41,35 @@ router.get('/:id', (req, res) => {
 
 })
 
+router.post('/:id/reviews', (req, res) => {
+    const movieId = req.params.id;
+    const { name, text, vote } = req.body;
+
+    if (!name || !text) {
+        return res.status(400).json({ err: 'Dati della recensione incompleti' });
+    }
+
+    const sql = 'INSERT INTO reviews (movie_id, name, text, vote) VALUES (?, ?, ?, ?)';
+
+    connection.query(sql, [movieId, name, text, vote], (err, result) => {
+        if (err) {
+            return res.status(500).json({ err: 'Errore nel salvataggio della recensione' });
+        }
+
+
+        res.status(201).json({
+            message: 'Recensione aggiunta con successo',
+            review: {
+                id: result.insertId,
+                movie_id: movieId,
+                name,
+                text,
+                vote
+            }
+        });
+    });
+});
+
 
 
 module.exports = router
